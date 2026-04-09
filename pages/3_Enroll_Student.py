@@ -30,8 +30,8 @@ try:
         course_options = {c[1]: c[0] for c in courses}
 
         with st.form("enroll_form"):
-            selected_student = st.selectbox("Select Student", options=student_options.keys())
-            selected_course = st.selectbox("Select Course", options=course_options.keys())
+            selected_student = st.selectbox("Select Student", options=list(student_options.keys()))
+            selected_course = st.selectbox("Select Course", options=list(course_options.keys()))
             submitted = st.form_submit_button("Enroll")
 
             if submitted:
@@ -47,28 +47,11 @@ try:
                     conn.commit()
                     cur.close()
                     conn.close()
-                    st.success(f"✅ '{selected_student}' enrolled in '{selected_course}'!")
+                    st.success(f"Enrolled '{selected_student}' in '{selected_course}' successfully!")
                 except psycopg2.errors.UniqueViolation:
-                    st.error("⚠️ This student is already enrolled in that course.")
+                    st.error("This student is already enrolled in that course.")
                 except Exception as e:
                     st.error(f"Error: {e}")
 
 except Exception as e:
-    st.error(f"Error: {e}")
-```
-
----
-
-**Step 4 — Scroll down and click the green `Commit changes` button**
-
----
-
-Once that's committed your repository should now have all the right files:
-```
-streamlit-student-app/
-├── streamlit_app.py
-├── requirements.txt
-└── pages/
-    ├── 1_Add_Student.py
-    ├── 2_Add_Course.py
-    └── 3_Enroll_Student.py
+    st.error(f"Error loading data: {e}")
